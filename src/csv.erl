@@ -1,12 +1,4 @@
 %%% RFC 4180 compliant CSV parser.
-%%%
-%%% Handles utf8 data (RFC 4180 only handles 7-bit ascii).
-%%% Accepts lines ending in LF only (i.e., not CR LF).
-%%% Configurable separator character, default comma (,).
-%%% Can be configured to ignore comments, i.e., lines starting with hash (#).
-%%% Default is non-strict mode, in which it ignores comments and allows
-%%%   double quotes (") in non-quoted fields.
-%%% NOTE: does not validate that all records have equal number of fields.
 
 -module(csv).
 

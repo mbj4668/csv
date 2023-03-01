@@ -5,7 +5,7 @@ RFC 4180 compliant CSV parser.
 ## Features
 
   - Handles utf8 data (RFC 4180 only defines 7-bit ascii).
-  - Accepts lines ending in LF only (RFC 4180 only defines CR LF as
+  - Accepts lines ending in LF (RFC 4180 only defines CR LF as
     line ending).
   - Configurable separator character, default comma (,).
   - Can be configured to ignore comments, i.e., lines starting with hash (#).
