@@ -1,0 +1,26 @@
+#!/usr/bin/env escript
+%% -*- erlang -*-
+%%! -pa ../ebin -pa ../deps/jsone/ebin
+
+main(Args) ->
+    {Opts, InFName} = parse_opts(Args, #{strict => true}),
+    case csv:read_file(InFName, Opts) of
+        {ok, L} ->
+            io:format("~ts\n", [jsone:encode(L)]);
+        {error, Error} ->
+            io:format(standard_error, "~s:~s\n",
+                      [InFName, csv:format_error(Error)]),
+            halt(1)
+    end.
+
+parse_opts(["--no-strict" | T], Opts) ->
+    parse_opts(T, Opts#{strict => false});
+parse_opts(["--separator", [Sep] | T], Opts) ->
+    parse_opts(T, Opts#{separator => Sep});
+parse_opts(["--no-comments" | T], Opts) ->
+    parse_opts(T, Opts#{comments => false});
+parse_opts(["--comments" | T], Opts) ->
+    parse_opts(T, Opts#{comments => true});
+parse_opts([InFName], Opts) ->
+    {Opts, InFName}.
+
