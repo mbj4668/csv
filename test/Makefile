@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
-.PHONY: test test1 test2
-test: test1 test2
+.PHONY: test test1 test2 test3
+test: test1 test2 test3
 
 test1: csv-test-data
 	@set -o pipefail;							\
@@ -34,6 +34,19 @@ test2: comments.csv
 	trap "rm -f -- '$$t'" EXIT;						\
 	./csv2json --no-strict $< | jq . > $$t;					\
 	if cat comments.json | diff $$t -; then					\
+	    echo "ok";								\
+	else									\
+	    exit 1;								\
+	fi;									\
+	rm -f -- $$t;
+
+test3: semi-colon.csv
+	@set -o pipefail;							\
+	echo -n "$< ...";							\
+	t=$$(tempfile) || exit;							\
+	trap "rm -f -- '$$t'" EXIT;						\
+	./csv2json --separator ";" $< | jq . > $$t;				\
+	if cat semi-colon.json | diff $$t -; then				\
 	    echo "ok";								\
 	else									\
 	    exit 1;								\
