@@ -6,8 +6,10 @@
 
 -record(opts, {separator, comments, strict}).
 
+-define(emptyfield, "").
+
 -spec read_file(FName :: string()) ->
-          {ok, [list(binary())]} | {error, term()}.
+          {ok, [list(string())]} | {error, term()}.
 read_file(FName) ->
     read_file(FName, #{}).
 
@@ -15,8 +17,7 @@ read_file(FName) ->
                 Opts :: #{separator => char(),
                           strict => boolean(),
                           comments => boolean()}) ->
-          {ok, [list(binary())]} | {error, term()}.
-%% Consider using unicode:characters_to_list() on returned binaries.
+          {ok, [list(string())]} | {error, term()}.
 read_file(FName, OptsMap) ->
     Separator = maps:get(separator, OptsMap, $,),
     Strict = maps:get(strict, OptsMap, false),
@@ -37,17 +38,17 @@ p_fields(L, Opts, Line, FsAcc, RsAcc) ->
     #opts{comments = Comments, separator = Sep} = Opts,
     case L of
         [Sep | T] ->
-            p_fields(T, Opts, Line, [<<"">> | FsAcc], RsAcc);
+            p_fields(T, Opts, Line, [?emptyfield | FsAcc], RsAcc);
         [$\r, $\n]->
-            return([<<"">> | FsAcc], RsAcc);
+            return([?emptyfield | FsAcc], RsAcc);
         [$\r, $\n | T] ->
             p_fields(T, Opts, Line+1, [],
-                     [lists:reverse([<<"">> | FsAcc]) | RsAcc]);
+                     [lists:reverse([?emptyfield | FsAcc]) | RsAcc]);
         [$\n] ->
-            return([<<"">> | FsAcc], RsAcc);
+            return([?emptyfield | FsAcc], RsAcc);
         [$\n | T] ->
             p_fields(T, Opts, Line+1, [],
-                     [lists:reverse([<<"">> | FsAcc]) | RsAcc]);
+                     [lists:reverse([?emptyfield | FsAcc]) | RsAcc]);
         [$# | T] when FsAcc == [] andalso Comments ->
             p_fields(skip_to_eol(T), Opts, Line+1, [], RsAcc);
         [$" | T] ->
@@ -62,7 +63,7 @@ p_field(L, Acc, Opts, Line, FsAcc, RsAcc) ->
     #opts{strict = Strict, separator = Sep} = Opts,
     case L of
         [Sep] ->
-            return([<<"">>, brev(Acc) | FsAcc], RsAcc);
+            return([?emptyfield, brev(Acc) | FsAcc], RsAcc);
         [Sep | T] ->
             p_fields(T, Opts, Line, [brev(Acc) | FsAcc], RsAcc);
         [$\r, $\n | T] ->
@@ -87,7 +88,7 @@ p_quoted_field(L, Acc, Opts, StartL, Line, FsAcc, RsAcc) ->
         [$"] ->
             return([brev(Acc) | FsAcc], RsAcc);
         [$", Sep] ->
-            return([<<"">>, brev(Acc) | FsAcc], RsAcc);
+            return([?emptyfield, brev(Acc) | FsAcc], RsAcc);
         [$", Sep | T] ->
             p_fields(T, Opts, Line, [brev(Acc) | FsAcc], RsAcc);
         [$", $\r, $\n | T] ->
@@ -140,4 +141,4 @@ return(FsAcc, RsAcc) ->
     {ok, lists:reverse([lists:reverse(FsAcc) | RsAcc])}.
 
 brev(Acc) ->
-    unicode:characters_to_binary(lists:reverse(Acc)).
+    lists:reverse(Acc).

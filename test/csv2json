@@ -5,8 +5,9 @@
 main(Args) ->
     {Opts, InFName} = parse_opts(Args, #{strict => true}),
     case csv:read_file(InFName, Opts) of
-        {ok, L} ->
-            io:format("~ts\n", [jsone:encode(L)]);
+        {ok, Ls1} ->
+            Ls2 = [[unicode:characters_to_binary(F) || F <- L] || L <- Ls1],
+            io:format("~ts\n", [jsone:encode(Ls2)]);
         {error, Error} ->
             io:format(standard_error, "~s:~s\n",
                       [InFName, csv:format_error(Error)]),

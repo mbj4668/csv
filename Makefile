@@ -1,6 +1,6 @@
 PROJECT = csv
 PROJECT_DESCRIPTION = Erlang library for parsing csv files
-PROJECT_VERSION = 1.0.0
+PROJECT_VERSION = 1.1.0
 
 TEST_DEPS = jsone
 

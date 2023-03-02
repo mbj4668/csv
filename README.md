@@ -20,7 +20,7 @@ NOTE: does not validate that all records have equal number of fields.
 
 ```
 -spec read_file(FName :: string()) ->
-          {ok, [list(binary())]} | {error, term()}.
+          {ok, [list(string())]} | {error, term()}.
 ```
 
 ### `read_file/2`
@@ -30,7 +30,7 @@ NOTE: does not validate that all records have equal number of fields.
                 Opts :: #{separator => char(),
                           strict => boolean(),
                           comments => boolean()}) ->
-          {ok, [list(binary())]} | {error, term()}.
+          {ok, [list(string())]} | {error, term()}.
 ```
 
 ### `format_error/1`
