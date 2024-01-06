@@ -1,13 +1,9 @@
-PROJECT = csv
-PROJECT_DESCRIPTION = Erlang library for parsing csv files
-PROJECT_VERSION = 1.1.0
+DESCRIPTION = Erlang library for parsing csv files
 
 TEST_DEPS = jsone
+dep_jsone = git https://github.com/sile/jsone.git
 
-include $(if $(ERLANG_MK_FILENAME),$(ERLANG_MK_FILENAME),erlang.mk)
+include erl.mk
 
-tests ::
-	$(MAKE) -C test
-
-clean ::
-	$(MAKE) -C test clean
+erl.mk:
+	curl -O https://raw.githubusercontent.com/mbj4668/erl.mk/main/$@

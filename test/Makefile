@@ -4,7 +4,7 @@ SHELL := /bin/bash
 test: test1 test2 test3
 
 test1: csv-test-data
-	@set -o pipefail;							\
+	set -o pipefail;							\
 	for f in csv-test-data/csv/*.csv; do					\
 	    echo -n "$$f ...";							\
 	    b=`basename $$f .csv`;						\
