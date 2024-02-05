@@ -1,7 +1,7 @@
 DESCRIPTION = Erlang library for parsing csv files
 
-TEST_DEPS = jsone
-dep_jsone = git https://github.com/sile/jsone.git
+TEST_DEPS = mjson
+dep_mjson = git https://github.com/mbj4668/mjson.git
 
 include erl.mk
 

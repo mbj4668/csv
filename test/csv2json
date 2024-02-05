@@ -1,13 +1,13 @@
 #!/usr/bin/env escript
 %% -*- erlang -*-
-%%! -pa ../ebin -pa ../deps/jsone/ebin
+%%! -pa ../ebin -pa ../deps/mjson/ebin
 
 main(Args) ->
     {Opts, InFName} = parse_opts(Args, #{strict => true}),
     case csv:read_file(InFName, Opts) of
         {ok, Ls1} ->
             Ls2 = [[unicode:characters_to_binary(F) || F <- L] || L <- Ls1],
-            io:format("~ts\n", [jsone:encode(Ls2)]);
+            io:format("~ts\n", [mjson:encode(Ls2)]);
         {error, Error} ->
             io:format(standard_error, "~s:~s\n",
                       [InFName, csv:format_error(Error)]),

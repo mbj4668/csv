@@ -8,7 +8,7 @@ test1: csv-test-data
 	for f in csv-test-data/csv/*.csv; do					\
 	    echo -n "$$f ...";							\
 	    b=`basename $$f .csv`;						\
-	    t=$$(tempfile) || exit;						\
+	    t=$$(mktemp) || exit;						\
 	    trap "rm -f -- '$$t'" EXIT;						\
 	    ./csv2json $$f 2> /dev/null | jq . > $$t;				\
 	    r=$$?;								\
@@ -30,7 +30,7 @@ test1: csv-test-data
 test2: comments.csv
 	@set -o pipefail;							\
 	echo -n "$< ...";							\
-	t=$$(tempfile) || exit;							\
+	t=$$(mktemp) || exit;							\
 	trap "rm -f -- '$$t'" EXIT;						\
 	./csv2json --no-strict $< | jq . > $$t;					\
 	if cat comments.json | diff $$t -; then					\
@@ -43,7 +43,7 @@ test2: comments.csv
 test3: semi-colon.csv
 	@set -o pipefail;							\
 	echo -n "$< ...";							\
-	t=$$(tempfile) || exit;							\
+	t=$$(mktemp) || exit;							\
 	trap "rm -f -- '$$t'" EXIT;						\
 	./csv2json --separator ";" $< | jq . > $$t;				\
 	if cat semi-colon.json | diff $$t -; then				\
